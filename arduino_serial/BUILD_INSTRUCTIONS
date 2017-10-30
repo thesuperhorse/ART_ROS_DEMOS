@@ -1,0 +1,59 @@
+Make sure ROS Kinetic is installed and PATH variables are set; this will be true if "roscore" begins a process.
+Make sure ros_serial and rosserial_arduino is installed for Kinetic.
+Make sure a serial port is open and connected to an arduino board, easy way to check this is using Arduino IDE; you may need to grant permission with: chmod 666 /dev/ttyACM0 if your arduino is connected on ttyACM0. You can check this by trying to upload an example program on the Arduino; the IDE console will say Upload Successful.
+
+
+|-------Terminal Commands----------|
+cd any_directory
+mkdir catkin_ws_arduino
+cd catkin_ws_arduino
+mkdir src
+catkin_make
+echo echo
+echo copy art_sub and square_art folders into src such that it becomes like the below hierarchy
+
+*--Instructions Paused*
+
+/catkin_ws_arduino
+../src
+  ../art_sub                    #Arduino package in this project
+    ../package.xml              #art_sub package dependecies
+    ../CMakeLists.txt           #CMake instructions for art_sub project
+        #if ../firmware/listener.cpp is changed, it'll need to be reflected in this file
+    ../firmware                 #Package for our target firmware
+      ../listener.cpp           #Subscriber node
+      ../CMakeLists.txt         #Specify board and port
+            #if ./listener.cpp is changed, it'll need to be reflected in this file
+  ../square_art                 #Host PC Package
+    ../package.xml              #square_art package dependecies
+    ../CMakeLists.txt           #CMake instructions for square_art project
+        #if ../src/talker.cpp is changed, it'll need to be reflected in this file
+    ../src
+      ../talker.cpp             #Publisher node
+    ../include
+  ../CMakeLists.txt             #Auto-generated file, do not change
+
+
+*--Instructions Continued--*
+
+
+catkin_make
+catkin_make art_sub_firmware-upload
+
+echo Testing
+echo Open a new terminal, cd /catkin_ws_arduino, source ./devel/setup.bash for each of the next commands
+
+roscore
+
+rosrun rosserial_python serial_node.py /dev/ttyACM0
+
+rostopic echo arduino
+
+rostopic echo chatter
+
+rosrun square_art talker
+
+echo no need to cd and source anymore
+
+rosrun rqt_graph rqt_graph &
+
