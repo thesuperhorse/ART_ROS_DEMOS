@@ -1,0 +1,80 @@
+Make sure ROS Kinetic is installed and PATH variables are set; this will be true if "roscore" begins a process.
+
+Scroll down to Appendix A if this is your first time.
+
+talker.cpp and listener.cpp implement a talker which publishes the value of a counter and listener.cpp subscribes to the counter and outputs it using ROS stream.
+
+add_two_ints implements a server which awaits for requests then returns the results
+
+A brief intro to ROS; please see documentation on ROS wiki for details.
+
+0. ROS executables
+roscore - executes main thread
+rostopic - returns information about a ros topic
+rosrun - executes a thread
+rqt_graph - visualises node structure
+an important command is source ./devel/setup.bash when applicable. puts ROS executables of current workspace onto the PATH of your terminal
+
+1. Publishers and Subscribers
+Roscore = Newstand
+Publisher = A media outlet
+Subscriber = Listener
+
+2. Messages and Services
+Server - implements service, waits for client to send request
+Client - sends requests to a server
+Messages - message_generation is a ROS package which facilitates auto-generation of relevant .h, .cpp, and .py for custom ROS message support
+Service - 
+
+Appendix A.
+|-------Terminal Commands----------|
+cd any_directory
+mkdir catkin_ws
+cd catkin_ws
+mkdir src
+catkin_make
+echo echo
+echo copy beginner_tutorials folder into src such that it becomes like the below hierarchy
+
+*--Instructions Paused*
+
+/catkin_ws
+../src
+  ../beginner_tutorials
+    ../package.xml                  #package dependencies
+    ../CMakeLists.txt               #CMake instructions for project
+        #if any file is changed, it'll need to be reflected in this file
+    ../src
+        #standard publish subscribe system
+      ../talker.cpp                 #Publisher node
+      ../listener.cpp               #Subscriber node
+        #service system
+      ../add_two_floats_server.cpp  #Server node
+      ../add_two_floats_client.cpp  #Client node   
+    ../include
+  ../CMakeLists.txt             #Auto-generated file, do not change
+
+
+*--Instructions Continued--*
+
+catkin_make
+
+echo Testing
+echo Open a new terminal, cd /catkin_ws, source ./devel/setup.bash for each of the next commands
+
+roscore
+
+rostopic echo chatter
+
+rosrun beginner_tutorials talker
+
+rosrun beginner_tutorials listener
+
+rosrun beginner_tutorials add_two_floats_server
+
+rosrun beginner_tutorials add_two_floats_client
+
+echo no need to cd and source anymore
+
+rosrun rqt_graph rqt_graph &
+
